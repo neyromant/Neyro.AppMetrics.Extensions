@@ -1,2 +1,2 @@
-# Neyro.AppMetrics.SystemRuntime.Statistic
-SystemRuntime Statistics Collector for App.Metrics
+# Neyro.AppMetrics.Extensions
+Extensions for AppMetrics
