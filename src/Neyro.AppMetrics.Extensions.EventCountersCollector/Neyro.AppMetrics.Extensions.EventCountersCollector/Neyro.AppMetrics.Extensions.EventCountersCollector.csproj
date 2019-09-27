@@ -5,16 +5,19 @@
     <IsPackage>True</IsPackage>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
-    <Authors>Andrey Kudashkin</Authors>
+    <Authors>Andrey Kudashkin aka NeyromANt</Authors>
     <PackageProjectUrl>https://github.com/neyromant/Neyro.AppMetrics.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/neyromant/Neyro.AppMetrics.Extensions.git</RepositoryUrl>
-    <PackageTags>AppMetrics Stats</PackageTags>
+    <PackageTags>AppMetrics Stats EventCounters</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <Version>0.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
+    <Description>AppMetrics's extension for collect EventCounters data from EventSource's which supports it.  E.g. RuntimeEventSource or NpgsqlEventSource.</Description>
+    <Copyright></Copyright>
+    <PackageReleaseNotes>First raw preview version of package.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
