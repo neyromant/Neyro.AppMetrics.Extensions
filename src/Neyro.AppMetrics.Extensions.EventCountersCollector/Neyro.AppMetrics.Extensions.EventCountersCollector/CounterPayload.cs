@@ -4,28 +4,42 @@ using System.Collections.Generic;
 
 namespace Neyro.AppMetrics.Extensions
 {
-    internal struct CounterPayload : ICounterPayload
+    internal struct CounterPayload
     {
-        private readonly Dictionary<string, GaugeOptions> _gaugesCache;
-        private readonly string _name;
-        private readonly double _value;
+        public string Name { get; }
+        public double Value { get; }
+        public CounterType Type { get; }
 
-        public CounterPayload(Dictionary<string, GaugeOptions> gaugesCache, IDictionary<string, object> payloadFields)
+        public CounterPayload(IDictionary<string, object> payloadFields)
         {
-            _gaugesCache = gaugesCache;
-            _name = payloadFields["Name"].ToString();
-            _value = (double)payloadFields["Mean"];
-        }
+            Name = payloadFields["Name"].ToString();
 
-        public void Register(IMetricsRoot metrics, string eventSourceName)
-        {
-            var gaugesCacheKey = eventSourceName + _name;
-            if (!_gaugesCache.TryGetValue(gaugesCacheKey, out var gauge))
+            if (payloadFields.ContainsKey("CounterType"))
             {
-                gauge = new GaugeOptions { Context = eventSourceName, Name = _name };
-                _gaugesCache.Add(gaugesCacheKey, gauge);
+                if (payloadFields["CounterType"].Equals("Sum"))
+                {
+                    Value = (double)payloadFields["Increment"];
+                    Type = CounterType.Increment;
+                }
+                else
+                {
+                    Value = (double)payloadFields["Mean"];
+                    Type = CounterType.Mean;
+                }
             }
-            metrics.Measure.Gauge.SetValue(gauge, _value);
+            else
+            {
+                if (payloadFields.Count == 6)
+                {
+                    Value = (double)payloadFields["Increment"];
+                    Type = CounterType.Increment;
+                }
+                else
+                {
+                    Value = (double)payloadFields["Mean"];
+                    Type = CounterType.Mean;
+                }
+            }
         }
     }
 }

@@ -66,21 +66,18 @@ namespace Neyro.AppMetrics.Extensions
             if (payloadFields == null)
                 return;
 
-            ICounterPayload payload;
-            if (payloadFields.ContainsKey("CounterType"))
+            var payload = new CounterPayload(payloadFields);
+            switch (payload.Type)
             {
-                payload = payloadFields["CounterType"].Equals("Sum")
-                    ? new IncrementingCounterPayload(_counters, payloadFields)
-                    : (ICounterPayload)new CounterPayload(_gauges, payloadFields);
+                case CounterType.Mean:
+                    RegisterGaugeValue(payload, eventData.EventSource.Name);
+                    break;
+                case CounterType.Increment:
+                    RegisterCounterValue(payload, eventData.EventSource.Name);
+                    break;
+                default: 
+                    break;
             }
-            else
-            {
-                payload = payloadFields.Count == 6
-                    ? new IncrementingCounterPayload(_counters, payloadFields)
-                    : (ICounterPayload)new CounterPayload(_gauges, payloadFields);
-            }
-
-            payload.Register(_metrics, eventData.EventSource.Name);
         }
 
         private void RuntimeEventListener_EventSourceCreated(object? sender, EventSourceCreatedEventArgs e)
@@ -97,6 +94,28 @@ namespace Neyro.AppMetrics.Extensions
             });
 
             _handledSources.Add(eventSource);
+        }
+
+        private void RegisterCounterValue(CounterPayload payload, string eventSourceName)
+        {
+            var countersCacheKey = eventSourceName + payload.Name;
+            if (!_counters.TryGetValue(countersCacheKey, out var counter))
+            {
+                counter = new CounterOptions { Context = eventSourceName, Name = payload.Name, ResetOnReporting = true };
+                _counters.Add(countersCacheKey, counter);
+            }
+            _metrics.Measure.Counter.Increment(counter, (long)payload.Value);
+        }
+
+        private void RegisterGaugeValue(CounterPayload payload, string eventSourceName)
+        {
+            var gaugesCacheKey = eventSourceName + payload.Name;
+            if (!_gauges.TryGetValue(gaugesCacheKey, out var gauge))
+            {
+                gauge = new GaugeOptions { Context = eventSourceName, Name = payload.Name };
+                _gauges.Add(gaugesCacheKey, gauge);
+            }
+            _metrics.Measure.Gauge.SetValue(gauge, payload.Value);
         }
     }
 }
