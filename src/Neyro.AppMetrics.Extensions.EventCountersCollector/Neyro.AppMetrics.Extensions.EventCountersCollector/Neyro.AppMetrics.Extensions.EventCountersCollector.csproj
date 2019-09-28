@@ -12,12 +12,14 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
     <Description>AppMetrics's extension for collect EventCounters data from EventSource's which supports it.  E.g. RuntimeEventSource or NpgsqlEventSource.</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>First raw preview version of package.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.0.2 Fixed possible collisions on counter names from different sources
+0.0.1 First raw preview version of package.</PackageReleaseNotes>
+    <FileVersion>0.0.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

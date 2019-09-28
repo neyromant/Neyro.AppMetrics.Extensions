@@ -19,10 +19,11 @@ namespace Neyro.AppMetrics.Extensions
 
         public void Register(IMetricsRoot metrics, string eventSourceName)
         {
-            if (!_gaugesCache.TryGetValue(_name, out var gauge))
+            var gaugesCacheKey = eventSourceName + _name;
+            if (!_gaugesCache.TryGetValue(gaugesCacheKey, out var gauge))
             {
                 gauge = new GaugeOptions { Context = eventSourceName, Name = _name };
-                _gaugesCache.Add(_name, gauge);
+                _gaugesCache.Add(gaugesCacheKey, gauge);
             }
             metrics.Measure.Gauge.SetValue(gauge, _value);
         }

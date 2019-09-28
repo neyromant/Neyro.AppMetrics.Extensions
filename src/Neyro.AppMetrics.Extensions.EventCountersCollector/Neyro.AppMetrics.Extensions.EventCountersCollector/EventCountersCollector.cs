@@ -12,15 +12,20 @@ using System.Threading.Tasks;
 
 namespace Neyro.AppMetrics.Extensions
 {
-    public class EventCountersCollector : EventListener, IHostedService
+    public sealed class EventCountersCollector : EventListener, IHostedService
     {
         private readonly Dictionary<string, GaugeOptions> _gauges = new Dictionary<string, GaugeOptions>();
         private readonly Dictionary<string, CounterOptions> _counters = new Dictionary<string, CounterOptions>();
-        private readonly IMetricsRoot _metrics;
         private readonly EventCountersCollectorOptions _options;
-        private List<EventSource> _handledSources = new List<EventSource>();
+        private readonly List<EventSource> _handledSources = new List<EventSource>();
 
+        private readonly IMetricsRoot _metrics;
 
+        /// <summary>
+        /// Create instance of EventCountersCollector
+        /// </summary>
+        /// <param name="metricsRoot">Root of AppMetrics</param>
+        /// <param name="options">Options for EventCountersCollector</param>
         public EventCountersCollector(IMetricsRoot metricsRoot, EventCountersCollectorOptions options)
         {
             _metrics = metricsRoot ?? throw new ArgumentNullException(nameof(metricsRoot));
@@ -35,6 +40,11 @@ namespace Neyro.AppMetrics.Extensions
             EventSourceCreated += RuntimeEventListener_EventSourceCreated;
         }
 
+        /// <summary>
+        /// Create instance of EventCountersCollector
+        /// </summary>
+        /// <param name="metricsRoot">Root of AppMetrics</param>
+        /// <param name="options">OptionsSnapshot for EventCountersCollector</param>
         public EventCountersCollector(IMetricsRoot metricsRoot, IOptions<EventCountersCollectorOptions> options) : this(metricsRoot, options?.Value ?? throw new ArgumentNullException(nameof(options)))
         {
         }

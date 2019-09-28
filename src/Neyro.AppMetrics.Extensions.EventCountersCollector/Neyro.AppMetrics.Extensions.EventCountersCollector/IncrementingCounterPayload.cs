@@ -13,16 +13,17 @@ namespace Neyro.AppMetrics.Extensions
         {
             _countersCache = countersCache;
 
-            _name = payloadFields["Name"]?.ToString();
+            _name = payloadFields["Name"].ToString();
             _value = (double)payloadFields["Increment"];
         }
 
         public void Register(IMetricsRoot metrics, string eventSourceName)
         {
-            if (!_countersCache.TryGetValue(_name, out var counter))
+            var countersCacheKey = eventSourceName + _name;
+            if (!_countersCache.TryGetValue(countersCacheKey, out var counter))
             {
                 counter = new CounterOptions { Context = eventSourceName, Name = _name, ResetOnReporting = true };
-                _countersCache.Add(_name, counter);
+                _countersCache.Add(countersCacheKey, counter);
             }
             var value = (long)_value;
             metrics.Measure.Counter.Increment(counter, value);
