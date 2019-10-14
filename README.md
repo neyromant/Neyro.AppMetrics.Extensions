@@ -20,3 +20,4 @@ services.AddHostedService(sp => new Neyro.AppMetrics.Extensions.EventCountersCol
 ));
 ```
 
+Nuget package is [here](https://www.nuget.org/packages/Neyro.AppMetrics.Extensions.EventCountersCollector/)
