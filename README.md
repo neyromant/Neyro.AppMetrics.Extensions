@@ -3,6 +3,10 @@
 
 Usage:
 
+```
+dotnet add package Neyro.AppMetrics.Extensions.EventCountersCollector --version 0.0.3
+```
+
 Just add EventCountersCollector as HostedService in your AspNetCore app.
 
 ```
