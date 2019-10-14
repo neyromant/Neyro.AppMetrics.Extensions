@@ -21,3 +21,7 @@ services.AddHostedService(sp => new Neyro.AppMetrics.Extensions.EventCountersCol
 ```
 
 Nuget package is [here](https://www.nuget.org/packages/Neyro.AppMetrics.Extensions.EventCountersCollector/)
+
+Dashboards for Grafana/Influx: [System.Runtime](https://github.com/neyromant/Neyro.AppMetrics.Extensions/blob/develop/dashboards/grafana_influx/system.runtime.json), [Npgsql](https://github.com/neyromant/Neyro.AppMetrics.Extensions/blob/develop/dashboards/grafana_influx/npgsql.json)
+
+![Example](https://github.com/neyromant/Neyro.AppMetrics.Extensions/blob/develop/dashboards/grafana_influx/screen.PNG)
