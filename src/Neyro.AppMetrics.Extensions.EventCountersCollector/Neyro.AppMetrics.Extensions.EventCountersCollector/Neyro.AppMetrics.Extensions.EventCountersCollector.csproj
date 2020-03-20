@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
     <IsPackage>True</IsPackage>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
@@ -21,6 +20,7 @@
 0.0.2 Fixed possible collisions on counter names from different sources
 0.0.1 First raw preview version of package.</PackageReleaseNotes>
     <FileVersion>0.0.3.0</FileVersion>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
