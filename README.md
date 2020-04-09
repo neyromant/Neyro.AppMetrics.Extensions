@@ -4,7 +4,7 @@
 Usage:
 
 ```
-dotnet add package Neyro.AppMetrics.Extensions.EventCountersCollector --version 0.0.3
+dotnet add package Neyro.AppMetrics.Extensions.EventCountersCollector --version 0.0.4
 ```
 
 Just add EventCountersCollector as HostedService in your AspNetCore app.
