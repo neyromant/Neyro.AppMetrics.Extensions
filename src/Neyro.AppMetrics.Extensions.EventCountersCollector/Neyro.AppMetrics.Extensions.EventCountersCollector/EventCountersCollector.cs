@@ -103,9 +103,14 @@ namespace Neyro.AppMetrics.Extensions
             {
                 counter = new CounterOptions
                 {
-                    Context = eventSourceName, Name = payload.Name, ResetOnReporting = true,
-                    Tags = new MetricTags(payload.Metadata.Keys.ToArray(), payload.Metadata.Values.ToArray())
+                    Context = eventSourceName, Name = payload.Name, ResetOnReporting = true
                 };
+
+                if (_options.SetTagsFromMetadata)
+                {
+                    counter.Tags = new MetricTags(payload.Metadata.Keys.ToArray(), payload.Metadata.Values.ToArray());
+                }
+                
                 _counters.Add(countersCacheKey, counter);
             }
             _metrics.Measure.Counter.Increment(counter, (long)payload.Value);
@@ -119,9 +124,14 @@ namespace Neyro.AppMetrics.Extensions
                 gauge = new GaugeOptions
                 {
                     Context = eventSourceName,
-                    Name = payload.Name,
-                    Tags = new MetricTags(payload.Metadata.Keys.ToArray(), payload.Metadata.Values.ToArray())
+                    Name = payload.Name
                 };
+
+                if (_options.SetTagsFromMetadata)
+                {
+                    gauge.Tags = new MetricTags(payload.Metadata.Keys.ToArray(), payload.Metadata.Values.ToArray());
+                }
+
                 _gauges.Add(gaugesCacheKey, gauge);
             }
             _metrics.Measure.Gauge.SetValue(gauge, payload.Value);
