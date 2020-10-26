@@ -11,12 +11,13 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
     <Description>AppMetrics's extension for collect EventCounters data from EventSource's which supports it.  E.g. RuntimeEventSource or NpgsqlEventSource.</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>0.0.4 Targeted to netstandard2.1.
+    <PackageReleaseNotes>0.0.5 Allow setting tags from event metadata
+0.0.4 Targeted to netstandard2.1.
 0.0.3 Avoid allocations
 0.0.3 Avoid allocations
 0.0.2 Fixed possible collisions on counter names from different sources
@@ -24,7 +25,11 @@
     <FileVersion>0.0.3.0</FileVersion>
     <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
-
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="App.Metrics.Abstractions" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.0.0" />

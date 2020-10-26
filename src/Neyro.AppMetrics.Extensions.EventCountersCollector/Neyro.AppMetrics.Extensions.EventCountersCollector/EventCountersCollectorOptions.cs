@@ -11,6 +11,12 @@
         public int RefreshIntervalSec {  get; set; } = 5; 
 
         /// <summary>
+        /// Whether metadata should be parsed from the event counters api and populated as AppMetrics tags
+        /// Defaults to false so tags don't break existing metrics
+        /// </summary>
+        public bool  SetTagsFromMetadata { get; set; } = false;
+        
+        /// <summary>
         /// Enabled EventCounter's sources
         /// </summary>
         public string[] EnabledSources {  get; set; } = new [] { "System.Runtime" }; 
