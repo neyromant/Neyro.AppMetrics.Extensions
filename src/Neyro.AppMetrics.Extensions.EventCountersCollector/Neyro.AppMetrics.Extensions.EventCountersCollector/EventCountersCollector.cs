@@ -66,7 +66,7 @@ namespace Neyro.AppMetrics.Extensions
             if (payloadFields == null)
                 return;
 
-            var payload = new CounterPayload(payloadFields);
+            var payload = new CounterPayload(payloadFields, _options.SetTagsFromMetadata);
             switch (payload.Type)
             {
                 case CounterType.Mean:
@@ -98,7 +98,7 @@ namespace Neyro.AppMetrics.Extensions
 
         private void RegisterCounterValue(CounterPayload payload, string eventSourceName)
         {
-            var countersCacheKey = eventSourceName + payload.Name;
+            var countersCacheKey = eventSourceName + payload.Key;
             if (!_counters.TryGetValue(countersCacheKey, out var counter))
             {
                 counter = new CounterOptions
@@ -118,7 +118,7 @@ namespace Neyro.AppMetrics.Extensions
 
         private void RegisterGaugeValue(CounterPayload payload, string eventSourceName)
         {
-            var gaugesCacheKey = eventSourceName + payload.Name;
+            var gaugesCacheKey = eventSourceName + payload.Key;
             if (!_gauges.TryGetValue(gaugesCacheKey, out var gauge))
             {
                 gauge = new GaugeOptions

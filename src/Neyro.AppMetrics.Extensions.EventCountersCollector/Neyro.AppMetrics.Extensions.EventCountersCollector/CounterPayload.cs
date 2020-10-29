@@ -8,11 +8,21 @@ namespace Neyro.AppMetrics.Extensions
         public double Value { get; }
         public CounterType Type { get; }
         public IDictionary<string,string> Metadata { get; }
+        
+        /// <summary>
+        /// Get the key to use when creating a cache key for this counter.
+        /// When metadata is used we need a separate counter for every permutation
+        /// of the metadata so we use the metadata values in the key to identify
+        /// the counter when caching.
+        /// </summary>
+        public string? Key { get; }
 
-        public CounterPayload(IDictionary<string, object> payloadFields)
+        public CounterPayload(IDictionary<string, object> payloadFields, bool useMetadata)
         {
             Name = payloadFields["Name"].ToString();
-
+            Key = Name;
+            Metadata = new Dictionary<string, string>();
+            
             if (payloadFields.ContainsKey("CounterType"))
             {
                 if (payloadFields["CounterType"].Equals("Sum"))
@@ -40,14 +50,20 @@ namespace Neyro.AppMetrics.Extensions
                 }
             }
 
-            Metadata = ExtractTagsFromMetadata(payloadFields);
+            if (useMetadata)
+            {
+                ExtractTagsFromMetadata(payloadFields);
+                // setting the key from original metadata so avoid allocation if we join
+                // the values in the dictionary when creating cache key
+                payloadFields.TryGetValue("Metadata", out object metadataSource);
+                Key = $"{Name}{metadataSource as string}";
+            }
         }
-        
 
-        private static Dictionary<string, string> ExtractTagsFromMetadata(IDictionary<string, object> payloadFields)
+
+
+        private void ExtractTagsFromMetadata(IDictionary<string, object> payloadFields)
         {
-            var metadata = new Dictionary<string,string>();
-
             if (payloadFields.ContainsKey("Metadata"))
             {
                 string? payloadMetadata = payloadFields["Metadata"] as string;
@@ -58,11 +74,9 @@ namespace Neyro.AppMetrics.Extensions
                         var kv = strKv.Split(":");
                         if (kv.Length != 2)
                             continue;
-                        metadata.Add(kv[0], kv[1]);
+                        Metadata.Add(kv[0], kv[1]);
                     }
             }
-
-            return metadata;
         }
     }
 }

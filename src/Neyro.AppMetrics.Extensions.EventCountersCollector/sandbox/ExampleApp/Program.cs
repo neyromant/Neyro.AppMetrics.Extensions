@@ -37,7 +37,8 @@ namespace ExampleApp
                             new Neyro.AppMetrics.Extensions.EventCountersCollectorOptions
                             {
                                 RefreshIntervalSec = 5,
-                                EnabledSources = new[] {"System.Runtime" }
+                                EnabledSources = new[] {"System.Runtime" },
+                                SetTagsFromMetadata = true
                             }
                         )))
                         .ConfigureMetrics(Metrics)
