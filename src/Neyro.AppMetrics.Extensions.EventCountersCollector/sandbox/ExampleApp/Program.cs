@@ -14,6 +14,7 @@ namespace ExampleApp
         public static void Main(string[] args)
         {
             Metrics = AppMetrics.CreateDefaultBuilder()
+                //.Report.ToConsole()
                 .Report.ToInfluxDb(options =>
                 {
                     options.InfluxDb = new InfluxDbOptions
