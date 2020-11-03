@@ -39,7 +39,7 @@ namespace UnitTests
             public class AndMetadataUseIsDisabled
             {
                 [Test]
-                public void MetadataIsCopiedToCounterPayload()
+                public void MetadataIsNotCopiedToCounterPayload()
                 {
                     var input = new Dictionary<string, object>()
                     {
@@ -47,7 +47,7 @@ namespace UnitTests
                         {"Metadata", "key1:value1,key2:value2"}
                     };
                     var counterPayload = new CounterPayload(input, false);
-                    Assert.That(counterPayload.Metadata.Keys.Count, Is.EqualTo(0));
+                    Assert.IsNull(counterPayload.Metadata);
                 }
 
                 [Test]

@@ -106,7 +106,7 @@ namespace Neyro.AppMetrics.Extensions
                     Context = eventSourceName, Name = payload.Name, ResetOnReporting = true
                 };
 
-                if (_options.SetTagsFromMetadata)
+                if (_options.SetTagsFromMetadata && payload.Metadata != null)
                 {
                     counter.Tags = new MetricTags(payload.Metadata.Keys.ToArray(), payload.Metadata.Values.ToArray());
                 }
@@ -127,7 +127,7 @@ namespace Neyro.AppMetrics.Extensions
                     Name = payload.Name
                 };
 
-                if (_options.SetTagsFromMetadata)
+                if (_options.SetTagsFromMetadata && payload.Metadata != null)
                 {
                     gauge.Tags = new MetricTags(payload.Metadata.Keys.ToArray(), payload.Metadata.Values.ToArray());
                 }
