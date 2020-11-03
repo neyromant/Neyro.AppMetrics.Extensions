@@ -7,11 +7,21 @@ namespace Neyro.AppMetrics.Extensions
         public string Name { get; }
         public double Value { get; }
         public CounterType Type { get; }
-        public IDictionary<string,string> Metadata { get; }
+        public IDictionary<string, string>? Metadata { get; }
+        
+        /// <summary>
+        /// Get the key to use when creating a cache key for this counter.
+        /// When metadata is used we need a separate counter for every permutation
+        /// of the metadata so we use the metadata values in the key to identify
+        /// the counter when caching.
+        /// </summary>
+        public string? Key { get; }
 
-        public CounterPayload(IDictionary<string, object> payloadFields)
+        public CounterPayload(IDictionary<string, object> payloadFields, bool useMetadata)
         {
             Name = payloadFields["Name"].ToString();
+            Metadata = null;
+            Key = Name;
 
             if (payloadFields.ContainsKey("CounterType"))
             {
@@ -40,26 +50,26 @@ namespace Neyro.AppMetrics.Extensions
                 }
             }
 
-            Metadata = ExtractTagsFromMetadata(payloadFields);
+            if (useMetadata && payloadFields.TryGetValue("Metadata", out object? metadataSource))
+            {
+                var payloadMetadata = metadataSource as string;
+                if(string.IsNullOrWhiteSpace(payloadMetadata)) 
+                    return;
+                Metadata = ExtractTagsFromMetadata(payloadMetadata);
+                Key = Name + payloadMetadata;
+            }
         }
         
-
-        private static Dictionary<string, string> ExtractTagsFromMetadata(IDictionary<string, object> payloadFields)
+        private IDictionary<string, string>? ExtractTagsFromMetadata(string payloadMetadata)
         {
-            var metadata = new Dictionary<string,string>();
-
-            if (payloadFields.ContainsKey("Metadata"))
+            var metaKVs = payloadMetadata.Split(",");
+            var metadata = new Dictionary<string, string>(metaKVs.Length);
+            foreach(var strKv in metaKVs)
             {
-                string? payloadMetadata = payloadFields["Metadata"] as string;
-                var metaKVs = payloadMetadata?.Split(",");
-                if (metaKVs != null)
-                    foreach(var strKv in metaKVs)
-                    {
-                        var kv = strKv.Split(":");
-                        if (kv.Length != 2)
-                            continue;
-                        metadata.Add(kv[0], kv[1]);
-                    }
+                var kv = strKv.Split(":");
+                if (kv.Length != 2)
+                    continue;
+                metadata.Add(kv[0], kv[1]);
             }
 
             return metadata;

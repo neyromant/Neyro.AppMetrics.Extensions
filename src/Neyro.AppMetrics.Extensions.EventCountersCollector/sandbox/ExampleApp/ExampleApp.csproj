@@ -6,8 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="3.1.0" />
+    <PackageReference Include="App.Metrics.Reporting.Console" Version="3.2.0" />
     <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="3.1.0" />
-    <PackageReference Include="Neyro.AppMetrics.Extensions.EventCountersCollector" Version="0.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Neyro.AppMetrics.Extensions.EventCountersCollector\Neyro.AppMetrics.Extensions.EventCountersCollector.csproj" />
   </ItemGroup>
 
 </Project>
