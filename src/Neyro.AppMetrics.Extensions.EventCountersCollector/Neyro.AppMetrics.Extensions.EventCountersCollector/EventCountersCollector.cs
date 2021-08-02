@@ -31,11 +31,11 @@ namespace Neyro.AppMetrics.Extensions
             _metrics = metricsRoot ?? throw new ArgumentNullException(nameof(metricsRoot));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             if (_options.RefreshIntervalSec < 0)
-                throw new ArgumentOutOfRangeException(nameof(options.RefreshIntervalSec));
+                throw new ArgumentOutOfRangeException($"{nameof(options)}.{nameof(options.RefreshIntervalSec)}");
             if (_options.EnabledSources == null)
-                throw new ArgumentNullException(nameof(options.EnabledSources));
+                throw new ArgumentNullException($"{nameof(options)}.{nameof(options.EnabledSources)}");
             if (_options.EnabledSources.Length == 0)
-                throw new ArgumentOutOfRangeException(nameof(options.EnabledSources));
+                throw new ArgumentOutOfRangeException($"{nameof(options)}.{nameof(options.EnabledSources)}");
 
             EventSourceCreated += RuntimeEventListener_EventSourceCreated;
         }
@@ -52,7 +52,7 @@ namespace Neyro.AppMetrics.Extensions
         public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            foreach(var source in _handledSources)
+            foreach (var source in _handledSources)
                 DisableEvents(source);
             return Task.CompletedTask;
         }
@@ -62,11 +62,14 @@ namespace Neyro.AppMetrics.Extensions
             if (!"EventCounters".Equals(eventData.EventName))
                 return;
 
-            var payloadFields = eventData.Payload?[0] as IDictionary<string, object>;
-            if (payloadFields == null)
+            if (!(eventData.Payload?[0] is IDictionary<string, object> payloadFields))
                 return;
 
             var payload = new CounterPayload(payloadFields, _options.SetTagsFromMetadata);
+
+            if (_options.IntervalSecFilter != null && payload.IntervalSec.HasValue && _options.IntervalSecFilter.TryGetValue(eventData.EventSource.Name, out var filter) && payload.IntervalSec.Value < filter) 
+                return;
+
             switch (payload.Type)
             {
                 case CounterType.Mean:
@@ -75,7 +78,7 @@ namespace Neyro.AppMetrics.Extensions
                 case CounterType.Increment:
                     RegisterCounterValue(payload, eventData.EventSource.Name);
                     break;
-                default: 
+                default:
                     break;
             }
         }
@@ -103,14 +106,16 @@ namespace Neyro.AppMetrics.Extensions
             {
                 counter = new CounterOptions
                 {
-                    Context = eventSourceName, Name = payload.Name, ResetOnReporting = true
+                    Context = eventSourceName,
+                    Name = payload.Name,
+                    ResetOnReporting = true
                 };
 
                 if (_options.SetTagsFromMetadata && payload.Metadata != null)
                 {
                     counter.Tags = new MetricTags(payload.Metadata.Keys.ToArray(), payload.Metadata.Values.ToArray());
                 }
-                
+
                 _counters.Add(countersCacheKey, counter);
             }
             _metrics.Measure.Counter.Increment(counter, (long)payload.Value);

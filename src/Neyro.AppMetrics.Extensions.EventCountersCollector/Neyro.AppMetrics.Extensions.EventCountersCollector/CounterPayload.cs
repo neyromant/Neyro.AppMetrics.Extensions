@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Neyro.AppMetrics.Extensions
 {
-    internal struct CounterPayload
+    internal readonly struct CounterPayload
     {
         public string Name { get; }
         public double Value { get; }
         public CounterType Type { get; }
         public IDictionary<string, string>? Metadata { get; }
-        
+        public double? IntervalSec { get; }
+
         /// <summary>
         /// Get the key to use when creating a cache key for this counter.
         /// When metadata is used we need a separate counter for every permutation
@@ -50,6 +52,8 @@ namespace Neyro.AppMetrics.Extensions
                 }
             }
 
+            IntervalSec = payloadFields.ContainsKey("IntervalSec") ? Convert.ToDouble(payloadFields["IntervalSec"]) : (double?)null;
+
             if (useMetadata && payloadFields.TryGetValue("Metadata", out object? metadataSource))
             {
                 var payloadMetadata = metadataSource as string;
@@ -60,7 +64,7 @@ namespace Neyro.AppMetrics.Extensions
             }
         }
         
-        private IDictionary<string, string>? ExtractTagsFromMetadata(string payloadMetadata)
+        private static IDictionary<string, string>? ExtractTagsFromMetadata(string payloadMetadata)
         {
             var metaKVs = payloadMetadata.Split(",");
             var metadata = new Dictionary<string, string>(metaKVs.Length);

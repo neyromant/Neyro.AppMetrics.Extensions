@@ -11,19 +11,21 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
-    <Version>0.0.7</Version>
+    <Version>0.0.8</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryType>git</RepositoryType>
     <Description>AppMetrics's extension for collect EventCounters data from EventSource's which supports it.  E.g. RuntimeEventSource or NpgsqlEventSource.</Description>
     <Copyright></Copyright>
-    <PackageReleaseNotes>0.0.7 Inadvertently obsolete previous version of a package in Nuget
-0.0.6 Fix caching of counters when metadata is used
-0.0.5 Allow setting tags from event metadata
-0.0.4 Targeted to netstandard2.1.
-0.0.3 Avoid allocations
-0.0.3 Avoid allocations
-0.0.2 Fixed possible collisions on counter names from different sources
-0.0.1 First raw preview version of package.</PackageReleaseNotes>
+    <PackageReleaseNotes>0.0.8 Added the ability to set a filter based on Interval Sec to exclude noise.
+      0.0.7 Inadvertently obsolete previous version of a package in Nuget
+      0.0.6 Fix caching of counters when metadata is used
+      0.0.5 Allow setting tags from event metadata
+      0.0.4 Targeted to netstandard2.1.
+      0.0.3 Avoid allocations
+      0.0.3 Avoid allocations
+      0.0.2 Fixed possible collisions on counter names from different sources
+      0.0.1 First raw preview version of package.
+    </PackageReleaseNotes>
     <FileVersion>0.0.3.0</FileVersion>
     <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
